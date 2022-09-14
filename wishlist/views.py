@@ -17,3 +17,11 @@ def show_wishlist_xml(request):
     return HttpResponse(
         serializers.serialize('xml', data), content_type='application/xml'
     )
+
+
+def show_wishlist_json(request):
+    data = BarangWishList.objects.all()
+
+    return HttpResponse(
+        serializers.serialize('json', data), content_type='application/json'
+    )
