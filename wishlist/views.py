@@ -25,3 +25,19 @@ def show_wishlist_json(request):
     return HttpResponse(
         serializers.serialize('json', data), content_type='application/json'
     )
+
+
+def show_wishlist_xml_by_id(request, id):
+    data = BarangWishList.objects.filter(pk=id)
+
+    return HttpResponse(
+        serializers.serialize('xml', data), content_type='application/xml'
+    )
+
+
+def show_wishlist_json_by_id(request, id):
+    data = BarangWishList.objects.filter(pk=id)
+
+    return HttpResponse(
+        serializers.serialize('json', data), content_type='application/json'
+    )
