@@ -1,9 +1,40 @@
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm
 from django.core import serializers
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from wishlist.models import BarangWishList
 
 # Create your views here.
+def register(request):
+    form = UserCreationForm()
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Akun telah berhasil dibuat!')
+            return redirect('wishlist:login')
+
+    context = {'form': form}
+    return render(request, 'register.html', context)
+
+
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('wishlist:show_wishlist')
+        else:
+            messages.info(request, 'Username atau Password salah!')
+    context = {}
+    return render(request, 'login.html', context)
+
+
 def show_wishlist(request):
     data_barang_wishlist = BarangWishList.objects.all()
     context = {'list_barang': data_barang_wishlist, 'nama': 'Nayyara Airlangga Raharjo'}
