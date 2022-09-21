@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.core import serializers
 from django.http import HttpResponse
@@ -40,6 +41,7 @@ def logout_user(request):
     return redirect('wishlist:login')
 
 
+@login_required(login_url='/wishlist/login')
 def show_wishlist(request):
     data_barang_wishlist = BarangWishList.objects.all()
     context = {'list_barang': data_barang_wishlist, 'nama': 'Nayyara Airlangga Raharjo'}
