@@ -3,9 +3,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.core import serializers
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from wishlist.models import BarangWishList
+
+import datetime
 
 # Create your views here.
 def register(request):
@@ -29,7 +32,14 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('wishlist:show_wishlist')
+            response = HttpResponseRedirect(
+                reverse("wishlist:show_wishlist")
+            )  # membuat response
+            response.set_cookie(
+                'last_login', str(datetime.datetime.now())
+            )  # membuat cookie last_login dan menambahkannya ke dalam response
+
+            return response
         else:
             messages.info(request, 'Username atau Password salah!')
     context = {}
@@ -38,13 +48,19 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('wishlist:login')
+    response = HttpResponseRedirect(reverse('wishlist:login'))
+    response.delete_cookie('last_login')
+    return response
 
 
 @login_required(login_url='/wishlist/login')
 def show_wishlist(request):
     data_barang_wishlist = BarangWishList.objects.all()
-    context = {'list_barang': data_barang_wishlist, 'nama': 'Nayyara Airlangga Raharjo'}
+    context = {
+        'list_barang': data_barang_wishlist,
+        'nama': 'Nayyara Airlangga Raharjo',
+        'last_login': request.COOKIES['last_login'],
+    }
 
     return render(request, 'wishlist.html', context)
 
