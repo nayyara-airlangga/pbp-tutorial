@@ -1,8 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h5>Nama: </h5>
-<p>{{ nama }}</p>
+<nav class="navbar bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand">{{ nama }}</a>
+    <div class="d-flex" role="search">
+      <button class="btn btn-outline-success">
+        <a href="{% url 'wishlist:logout' %}">
+          Logout
+        </a>
+      </button>
+    </div>
+  </div>
+</nav>
 
 <table>
     <tr>
