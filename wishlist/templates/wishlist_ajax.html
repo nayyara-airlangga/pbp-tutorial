@@ -20,6 +20,19 @@
 
 <h5>Sesi terakhir login: {{ last_login }}</h5>
 
+<button type="button" onclick="fetchWishlist();">Refresh</button>
+
+<form method="POST" id="wishlist-form">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+    <tr>
+      <td></td>
+      <td><input class="btn login_btn" type="submit" value="Create"></td>
+    </tr>
+  </table>
+</form>
+
 <button><a href="{% url 'wishlist:logout' %}">Logout</a></button>
 
 {% endblock content %}

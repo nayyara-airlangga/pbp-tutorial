@@ -3,12 +3,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.core import serializers
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from wishlist.forms import CreateBarangWishlistForm
 from wishlist.models import BarangWishList
 
 import datetime
+import json
 
 # Create your views here.
 def register(request):
@@ -55,7 +57,26 @@ def logout_user(request):
 
 @login_required(login_url='/wishlist/login')
 def wishlist_ajax(request):
-    return render(request, 'wishlist_ajax.html')
+    form = CreateBarangWishlistForm()
+
+    context = {'form': form}
+    return render(request, 'wishlist_ajax.html', context)
+
+
+@login_required(login_url='/wishlist/login')
+def create_wishlist_ajax(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        BarangWishList.objects.create(
+            nama_barang=data["nama_barang"],
+            deskripsi=data["deskripsi"],
+            harga_barang=data["harga_barang"],
+        )
+
+        return HttpResponse("Item created")
+
+    return HttpResponseNotAllowed('Incorrect method')
 
 
 @login_required(login_url='/wishlist/login')

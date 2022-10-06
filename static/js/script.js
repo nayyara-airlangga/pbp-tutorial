@@ -25,6 +25,27 @@ const fetchWishlist = async () => {
   document.getElementById("wishlist_table").innerHTML = table
 }
 
+document.getElementById("wishlist-form").onsubmit = async (event) => {
+  event.preventDefault()
+
+  let csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value
+
+  let formData = new FormData(document.getElementById("wishlist-form"))
+  let data = {}
+
+  formData.forEach((value, key) => {
+    data[key] = value
+  })
+
+  await fetch("/wishlist/ajax/submit", { 
+    method: "POST",
+    headers: {
+      "X-CSRFTOKEN": csrftoken
+    },
+    body: JSON.stringify(data)
+  })
+}
+
 if (window.location.pathname == "/wishlist/ajax") {
   fetchWishlist()
 }
