@@ -8,6 +8,7 @@ from wishlist.views import (
     show_wishlist_json,
     show_wishlist_xml_by_id,
     show_wishlist_json_by_id,
+    wishlist_ajax,
 )
 
 app_name = 'wishlist'
@@ -21,4 +22,5 @@ urlpatterns = [
     path('json/', show_wishlist_json, name='show_wishlist_json'),
     path('xml/<int:id>/', show_wishlist_xml_by_id, name='show_wishlist_xml_by_id'),
     path('json/<int:id>/', show_wishlist_json_by_id, name='show_wishlist_json_by_id'),
+    path('ajax', wishlist_ajax, name='wishlist_ajax'),
 ]

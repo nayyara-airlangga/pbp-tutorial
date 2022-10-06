@@ -54,6 +54,11 @@ def logout_user(request):
 
 
 @login_required(login_url='/wishlist/login')
+def wishlist_ajax(request):
+    return render(request, 'wishlist_ajax.html')
+
+
+@login_required(login_url='/wishlist/login')
 def show_wishlist(request):
     data_barang_wishlist = BarangWishList.objects.all()
     context = {
